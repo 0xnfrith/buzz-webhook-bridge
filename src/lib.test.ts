@@ -475,15 +475,16 @@ describe("keys and webhook headers", () => {
     expect(parsePubkey(nip19.npubEncode(pk))).toBe(pk.toLowerCase());
   });
 
-  test("resolveKeyFile joins systemd credentials dir for relative paths", () => {
+  test("resolveKeyFile joins systemd credentials dir with native path semantics", () => {
+    const credentialsDirectory = "/run/credentials/svc";
     expect(resolveKeyFile("listener_key", "/run/credentials/svc")).toBe(
-      "/run/credentials/svc/listener_key",
+      join(credentialsDirectory, "listener_key"),
     );
     expect(resolveKeyFile("/etc/credstore/listener_key", "/run/credentials/svc")).toBe(
       "/etc/credstore/listener_key",
     );
-    expect(resolveKeyFile("grokbot_ears_key", "/run/credentials/svc")).toBe(
-      "/run/credentials/svc/grokbot_ears_key",
+    expect(resolveKeyFile("grokbot_ears_key", credentialsDirectory)).toBe(
+      join(credentialsDirectory, "grokbot_ears_key"),
     );
   });
 
